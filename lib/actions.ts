@@ -47,3 +47,18 @@ export async function getWinRate() {
     return 0;
   }
 }
+
+export async function getHistory() {
+  try {
+    const history = await sql`
+      SELECT id, dilemma, outcome, created_at
+      FROM decisions
+      ORDER BY created_at DESC
+      LIMIT 100
+    `;
+    return history;
+  } catch (error) {
+    console.error('Database Error in getHistory:', error);
+    return [];
+  }
+}
