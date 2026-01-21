@@ -1,3 +1,4 @@
+import { LocalTime } from '@/components/local-time';
 import { getHistory } from '@/lib/actions';
 import { Card } from '@/components/ui/card';
 import Link from 'next/link';
@@ -9,12 +10,10 @@ export const dynamic = 'force-dynamic';
 export default async function HistoryPage() {
     const history = await getHistory();
 
-    // Group by Date (simple version)
-    // We can just list them for now to keep it raw/brutalist
-
     return (
         <div className="min-h-[100dvh] bg-black text-white p-6 pb-32">
-            {/* Header */}
+            {/* ... (Header code remains) ... */}
+
             <div className="flex items-center justify-between mb-8">
                 <Link href="/">
                     <Button variant="ghost" size="icon" className="text-zinc-500 hover:text-white">
@@ -36,12 +35,6 @@ export default async function HistoryPage() {
 
                 {history.map((item) => {
                     const isWin = item.outcome === 'executed';
-                    const date = new Date(item.created_at).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        hour: 'numeric',
-                        minute: 'numeric',
-                    });
 
                     return (
                         <Card
@@ -52,7 +45,9 @@ export default async function HistoryPage() {
                             <div className="flex justify-between items-start gap-4">
                                 <div className="flex-1">
                                     <p className="text-zinc-300 font-medium text-lg leading-snug">{item.dilemma}</p>
-                                    <p className="text-zinc-600 text-xs font-mono mt-2 uppercase">{date}</p>
+                                    <p className="text-zinc-600 text-xs font-mono mt-2 uppercase">
+                                        <LocalTime date={item.created_at} />
+                                    </p>
                                 </div>
                                 <div className={`mt-1 ${isWin ? 'text-emerald-500' : 'text-red-500'}`}>
                                     {isWin ? <CheckCircle2 className="w-6 h-6" /> : <XCircle className="w-6 h-6" />}
