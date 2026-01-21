@@ -21,8 +21,11 @@ export default async function HistoryPage() {
                         <ArrowLeft className="w-6 h-6" />
                     </Button>
                 </Link>
-                <h2 className="text-zinc-500 text-xs font-mono uppercase tracking-widest">The Ledger</h2>
-                <div className="w-10"></div> {/* Spacer for alignment */}
+                <Link href="/history/analysis">
+                    <Button variant="ghost" size="sm" className="text-zinc-500 hover:text-white font-mono text-xs uppercase">
+                        Diagnostics
+                    </Button>
+                </Link>
             </div>
 
             {/* List */}
