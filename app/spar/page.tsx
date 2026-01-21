@@ -28,6 +28,8 @@ export default function SparPage() {
         setInput(e.target.value);
     };
 
+    const [category, setCategory] = useState<string | undefined>(undefined);
+
     const handleFormSubmit = async (e: FormEvent) => {
         e.preventDefault();
         if (!input.trim() || isLoading) return;
@@ -37,6 +39,7 @@ export default function SparPage() {
         setMessages(prev => [...prev, userMsg]);
         setInput('');
         setIsLoading(true);
+        setCategory(undefined); // Reset category
 
         try {
             const response = await fetch('/api/chat', {
@@ -63,8 +66,20 @@ export default function SparPage() {
                 const chunk = decoder.decode(value, { stream: true });
                 aiContent += chunk;
 
+                // Extract Category if present (regex)
+                // Format: ||CATEGORY:NAME||
+                const categoryMatch = aiContent.match(/\|\|CATEGORY:(\w+)\|\|/);
+                let displayContent = aiContent;
+
+                if (categoryMatch) {
+                    // Set category state (take the first match)
+                    if (!category) setCategory(categoryMatch[1]);
+                    // Remove the tag from display
+                    displayContent = aiContent.replace(/\|\|CATEGORY:\w+\|\|/g, '');
+                }
+
                 setMessages(prev => prev.map(m =>
-                    m.id === aiMsgId ? { ...m, content: aiContent } : m
+                    m.id === aiMsgId ? { ...m, content: displayContent } : m
                 ));
             }
         } catch (error) {
@@ -79,7 +94,7 @@ export default function SparPage() {
         const dilemma = messages.filter(m => m.role === 'user').pop()?.content || 'Unknown Dilemma';
 
         try {
-            await saveDecision(dilemma, result);
+            await saveDecision(dilemma, result, category);
         } catch (err) {
             console.error('Error saving decision:', err);
         } finally {

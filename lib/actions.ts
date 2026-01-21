@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache';
 
 const sql = postgres(process.env.DATABASE_URL!, { ssl: 'require' });
 
-export async function saveDecision(dilemma: string, outcome: 'app' | 'folded' | 'executed') {
+export async function saveDecision(dilemma: string, outcome: 'app' | 'folded' | 'executed', category?: string) {
   // 'app' is not a valid outcome, assuming 'folded' or 'executed'
   // If 'outcome' is passed from the UI, ensure it matches DB constraint
 
@@ -15,8 +15,8 @@ export async function saveDecision(dilemma: string, outcome: 'app' | 'folded' | 
 
   try {
     await sql`
-      INSERT INTO decisions (dilemma, outcome)
-      VALUES (${dilemma}, ${outcome})
+      INSERT INTO decisions (dilemma, outcome, meta)
+      VALUES (${dilemma}, ${outcome}, ${category ? sql.json({ category }) : null})
     `;
 
     revalidatePath('/');
