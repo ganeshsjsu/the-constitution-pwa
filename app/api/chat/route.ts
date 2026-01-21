@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     const { messages } = await req.json();
 
     const result = streamText({
-        model: google('gemini-2.0-flash'),
+        model: google('gemini-2.0-flash-lite-preview-02-05'),
         onError: (error) => {
             console.error('Gemini API Error:', error);
         },
