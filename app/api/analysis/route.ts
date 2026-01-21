@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
         // 3. Generate Analysis
         const { text } = await generateText({
-            model: google('gemini-2.0-flash-lite-preview-02-05'),
+            model: google('gemini-3-flash-preview'),
             system: "You are The Oracle, a ruthless system analyst. Your job is to predict the user's future based on their recent decision history. Be direct, brutal, and analytical.",
             prompt: `
             Analyze this decision history:
