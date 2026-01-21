@@ -35,6 +35,18 @@ export default async function HistoryPage() {
 
                 {history.map((item) => {
                     const isWin = item.outcome === 'executed';
+                    const category = item.meta?.category || 'UNCATEGORIZED';
+
+                    // Color mapping for tags
+                    const tagColors: Record<string, string> = {
+                        PHYSICAL: 'text-rose-400 bg-rose-950/30 border-rose-900/50',
+                        CAREER: 'text-blue-400 bg-blue-950/30 border-blue-900/50',
+                        TALENT: 'text-amber-400 bg-amber-950/30 border-amber-900/50',
+                        SOCIAL: 'text-purple-400 bg-purple-950/30 border-purple-900/50',
+                        UNCATEGORIZED: 'text-zinc-500 bg-zinc-900 border-zinc-800'
+                    };
+
+                    const tagClass = tagColors[category] || tagColors['UNCATEGORIZED'];
 
                     return (
                         <Card
@@ -44,6 +56,11 @@ export default async function HistoryPage() {
                         >
                             <div className="flex justify-between items-start gap-4">
                                 <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${tagClass}`}>
+                                            {category}
+                                        </span>
+                                    </div>
                                     <p className="text-zinc-300 font-medium text-lg leading-snug">{item.dilemma}</p>
                                     <p className="text-zinc-600 text-xs font-mono mt-2 uppercase">
                                         <LocalTime date={item.created_at} />

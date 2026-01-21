@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
         // 2. Format for AI
         const historyText = history.map(h =>
-            `- Date: ${new Date(h.created_at).toLocaleDateString()}, Dilemma: "${h.dilemma}", Result: ${h.outcome.toUpperCase()}`
+            `- [${h.meta?.category || 'General'}] Date: ${new Date(h.created_at).toLocaleDateString()}, Dilemma: "${h.dilemma}", Result: ${h.outcome.toUpperCase()}`
         ).join('\n');
 
         // 3. Generate Analysis
@@ -25,17 +25,30 @@ export async function POST(req: Request) {
             model: google('gemini-3-flash-preview'),
             system: "You are The Oracle, a ruthless system analyst. Your job is to predict the user's future based on their recent decision history. Be direct, brutal, and analytical.",
             prompt: `
+            USER CONTEXT:
+            - **PHYSICAL**: Health, Sleep, Diet (Goal: High Energy for Engineering).
+            - **CAREER**: Google Internship '26, Backend Mastery, LeetCode (Goal: Principal Engineer).
+            - **TALENT**: Guitar, Skill Acquisition (Goal: Mastery).
+            - **SOCIAL**: Relationships, Family (Goal: High Value Connection).
+
             Analyze this decision history:
             ${historyText}
 
-            Based on these patterns, write a 'Trajectory Report' for 1 year from now.
+            Based on these patterns, write a 'Trajectory Report'.
             
-            Structure:
-            1. THE PATTERN: Identify the core weakness (e.g., "You consistently fold under evening fatigue").
-            2. THE PROJECTION: Describe their life in 1 year if they don't change. Be specific and visceral.
-            3. THE FIX: One singular, high-leverage change they must make.
+            Structure your response exactly like this:
             
-            Keep it under 200 words. No fluff.
+            ## 1. EXECUTIVE SUMMARY
+            (One brutal sentence summarizing their current path).
+
+            ## 2. SECTOR ANALYSIS
+            **PHYSICAL**: [Projection based on Physical decisions]
+            **CAREER**: [Projection based on Career decisions - Will he keep the internship?]
+            **TALENT**: [Projection based on Talent decisions]
+            **SOCIAL**: [Projection based on Social decisions]
+
+            ## 3. THE FIX
+            (The single most critical adjustment needed immediately).
             `,
         });
 

@@ -51,7 +51,7 @@ export async function getWinRate() {
 export async function getHistory() {
   try {
     const history = await sql`
-      SELECT id, dilemma, outcome, created_at
+      SELECT id, dilemma, outcome, created_at, meta
       FROM decisions
       ORDER BY created_at DESC
       LIMIT 100
