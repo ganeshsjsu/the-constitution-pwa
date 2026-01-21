@@ -48,6 +48,10 @@ export default async function Home() {
           <p className="text-center text-zinc-600 text-xs mt-4 font-mono">
             Intervention Required?
           </p>
+
+          <Link href="/history" className="block text-center mt-8 text-zinc-800 text-xs uppercase tracking-widest hover:text-zinc-500 transition-colors">
+            View Ledger
+          </Link>
         </div>
 
       </div>
