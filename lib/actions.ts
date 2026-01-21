@@ -13,12 +13,18 @@ export async function saveDecision(dilemma: string, outcome: 'app' | 'folded' | 
     throw new Error('Invalid outcome');
   }
 
-  await sql`
-    INSERT INTO decisions (dilemma, outcome)
-    VALUES (${dilemma}, ${outcome})
-  `;
+  try {
+    await sql`
+      INSERT INTO decisions (dilemma, outcome)
+      VALUES (${dilemma}, ${outcome})
+    `;
 
-  revalidatePath('/');
+    revalidatePath('/');
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to save decision:', error);
+    return { success: false, error };
+  }
 }
 
 export async function getWinRate() {

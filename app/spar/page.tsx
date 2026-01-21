@@ -77,8 +77,15 @@ export default function SparPage() {
     const handleDecision = async (result: 'folded' | 'executed') => {
         setOutcome(result);
         const dilemma = messages.filter(m => m.role === 'user').pop()?.content || 'Unknown Dilemma';
-        await saveDecision(dilemma, result);
-        setTimeout(() => router.push('/'), 1500);
+
+        try {
+            await saveDecision(dilemma, result);
+        } catch (err) {
+            console.error('Error saving decision:', err);
+        } finally {
+            // Always redirect, even if save failed
+            setTimeout(() => router.push('/'), 1500);
+        }
     };
 
     useEffect(() => {
